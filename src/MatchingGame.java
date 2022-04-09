@@ -1,12 +1,12 @@
 /**
  * Matching game 
  * 
- * modified 20220407
- * date 20220404
- * @filename MatchingGame.java
- * @author Oscar Lam
- * @version 1.0
- * @see unit 2 activity 3
+ * modified     20220408
+ * date         20220404
+ * @filename    MatchingGame.java
+ * @author      Oscar Lam
+ * @version     1.0
+ * @see         Unit 2 activity 3
  */
 
 import java.awt.EventQueue;
@@ -21,10 +21,10 @@ public class MatchingGame extends javax.swing.JFrame {
 
 	ArrayList<String> cards = new ArrayList<String>();
 	ArrayList<String> set = new ArrayList<String>();
-	ImageIcon a = new ImageIcon("baseball.png");
-	ImageIcon b = new ImageIcon("basketball.png");
+	ImageIcon a = new ImageIcon("baseball.jpg");
+	ImageIcon b = new ImageIcon("basketball.jpg");
 	ImageIcon c = new ImageIcon("golfball.jpg");
-	ImageIcon d = new ImageIcon("soccerball.png");
+	ImageIcon d = new ImageIcon("soccerball.jpg");
 	ImageIcon e = new ImageIcon("tennisball.jpg");
 	ImageIcon f = new ImageIcon("volleyball.jpg");
 	ImageIcon back = new ImageIcon("cardback.jpg");
@@ -33,34 +33,9 @@ public class MatchingGame extends javax.swing.JFrame {
 	int cardsLeft = 12;
 	int[] change = new int[12];
 	int tries = 2;
-	boolean one = true; // Used to determine if card has been matched
-	boolean two = true;
-	boolean three = true;
-	boolean four = true;
-	boolean five = true;
-	boolean six = true;
-	boolean seven = true;
-	boolean eight = true;
-	boolean nine = true;
-	boolean ten = true;
-	boolean eleven = true;
-	boolean twelve = true;
 
-	boolean oneRe = false;
-	boolean twoRe = false;
-	boolean threeRe = false;
-	boolean fourRe = false;
-	boolean fiveRe = false;
-	boolean sixRe = false;
-	boolean sevenRe = false;
-	boolean eightRe = false;
-	boolean nineRe = false;
-	boolean tenRe = false;
-	boolean elevenRe = false;
-	boolean twelveRe = false;
-
-	boolean start = false;
-
+	boolean[] match = new boolean[12]; // Used to determine if card has been matched
+	boolean[] repeat = new boolean[12]; // Used to check if card is clicked twice
 
 	/**
 	 * Creates new form MatchingGame
@@ -77,6 +52,33 @@ public class MatchingGame extends javax.swing.JFrame {
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
+		
+		for(int i = 0; i<12;i++) {
+			match[i] = true;
+			repeat[i] = false;
+		}
+
+		/** Set change array */
+		for (int z = 0; z <= 11; z++) {
+			change[z] = 1;
+		}
+
+		/** Assign cards at random */
+		String temp;
+		for (int x = 0; x <= 5; x++) {
+			for (int y = 1; y <= 2; y++) {
+				temp = Integer.toString(x);
+				set.add(temp);
+			}
+		}
+		
+		/** Places cards at random location */
+		for (int x=0; x <= 11; x++) {
+			double index = Math.floor(Math.random()*(12-x));
+			int index1 = (int)index;
+			cards.add(set.get(index1));
+			set.remove(set.get(index1));
+		}
 
 		mainTitle = new javax.swing.JLabel();
 		Card1 = new javax.swing.JButton();
@@ -91,10 +93,10 @@ public class MatchingGame extends javax.swing.JFrame {
 		Card10 = new javax.swing.JButton();
 		Card11 = new javax.swing.JButton();
 		Card12 = new javax.swing.JButton();
-		btnPlay = new javax.swing.JButton();
 		btuGuessAgain = new javax.swing.JButton();
-		btnExit = new javax.swing.JButton();
+		btnRestart = new javax.swing.JButton();
 		txtInstruction = new javax.swing.JTextField();
+		txtInstruction.setEditable(false);
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Matching Game");
@@ -187,13 +189,6 @@ public class MatchingGame extends javax.swing.JFrame {
 			}
 		});
 
-		btnPlay.setText("Play");
-		btnPlay.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btnPlayActionPerformed(evt);
-			}
-		});
-
 		btuGuessAgain.setText("Guess Again");
 		btuGuessAgain.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,142 +196,101 @@ public class MatchingGame extends javax.swing.JFrame {
 			}
 		});
 
-		btnExit.setText("Exit");
-		btnExit.addActionListener(new java.awt.event.ActionListener() {
+		txtInstruction.setText("Make sure to click Guess Again after each guess.");
+		
+		btnRestart.setText("Restart");
+		btnRestart.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				btnExitActionPerformed(evt);
+				btnRestartActionPerformed(evt);
 			}
 		});
 
-		txtInstruction.setText("Click the Play button to start.  Make sure click Guess Again after each guess.");
-
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		layout.setHorizontalGroup(
-				layout.createParallelGroup(Alignment.LEADING)
+			layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
-						.addGroup(layout.createParallelGroup(Alignment.LEADING)
+					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+						.addGroup(layout.createSequentialGroup()
+							.addGap(58)
+							.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
 								.addGroup(layout.createSequentialGroup()
-										.addGap(58)
-										.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-												.addGroup(layout.createSequentialGroup()
-														.addGroup(layout.createParallelGroup(Alignment.TRAILING)
-																.addGroup(layout.createSequentialGroup()
-																		.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-																				.addComponent(Card5, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-																				.addComponent(Card1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-																		.addGap(18)
-																		.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-																				.addComponent(Card2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-																				.addComponent(Card6, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-																		.addGap(18)
-																		.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-																				.addComponent(Card3, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-																				.addComponent(Card7, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
-																.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-																		.addGroup(layout.createSequentialGroup()
-																				.addComponent(btnPlay)
-																				.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																				.addComponent(btuGuessAgain)
-																				.addGap(84))
-																		.addGroup(layout.createSequentialGroup()
-																				.addComponent(Card9, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-																				.addGap(18)
-																				.addComponent(Card10, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-																				.addGap(18)
-																				.addComponent(Card11, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))))
-														.addGroup(layout.createParallelGroup(Alignment.LEADING)
-																.addGroup(layout.createSequentialGroup()
-																		.addGap(18)
-																		.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-																				.addComponent(Card12, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-																				.addComponent(Card4, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-																				.addComponent(Card8, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
-																.addGroup(layout.createSequentialGroup()
-																		.addGap(27)
-																		.addComponent(btnExit))))
-												.addComponent(txtInstruction)))
-								.addGroup(layout.createSequentialGroup()
-										.addGap(131)
-										.addComponent(mainTitle)))
-						.addContainerGap(70, Short.MAX_VALUE))
-				);
+									.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+										.addGroup(layout.createSequentialGroup()
+											.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(Card5, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+												.addComponent(Card1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+											.addGap(18)
+											.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(Card2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+												.addComponent(Card6, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+											.addGap(18)
+											.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(Card3, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+												.addComponent(Card7, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
+										.addGroup(layout.createSequentialGroup()
+											.addComponent(Card9, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+											.addGap(18)
+											.addGroup(layout.createParallelGroup(Alignment.LEADING)
+												.addComponent(btuGuessAgain, Alignment.TRAILING)
+												.addComponent(Card10, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+											.addGap(18)
+											.addGroup(layout.createParallelGroup(Alignment.LEADING)
+												.addComponent(btnRestart, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
+												.addComponent(Card11, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))))
+									.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+									.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+										.addComponent(Card12, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+										.addComponent(Card4, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+										.addComponent(Card8, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(txtInstruction)))
+						.addGroup(layout.createSequentialGroup()
+							.addGap(145)
+							.addComponent(mainTitle)))
+					.addContainerGap(60, Short.MAX_VALUE))
+		);
 		layout.setVerticalGroup(
-				layout.createParallelGroup(Alignment.LEADING)
+			layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(mainTitle)
-						.addGap(30)
-						.addGroup(layout.createParallelGroup(Alignment.LEADING)
-								.addGroup(layout.createSequentialGroup()
-										.addGap(1)
-										.addComponent(Card4, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-								.addGroup(layout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(Card2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-										.addComponent(Card1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-										.addComponent(Card3, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
-						.addGap(18)
-						.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(Card8, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-								.addComponent(Card5, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-								.addComponent(Card6, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-								.addComponent(Card7, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-						.addGap(18)
-						.addGroup(layout.createParallelGroup(Alignment.TRAILING)
-								.addComponent(Card12, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-								.addComponent(Card11, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-								.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-										.addComponent(Card9, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-										.addComponent(Card10, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
-						.addGap(50)
+					.addGap(23)
+					.addComponent(mainTitle)
+					.addGap(18)
+					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+						.addGroup(layout.createSequentialGroup()
+							.addGap(1)
+							.addComponent(Card4, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
 						.addGroup(layout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnPlay)
-								.addComponent(btuGuessAgain)
-								.addComponent(btnExit))
-						.addGap(18)
-						.addComponent(txtInstruction, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGap(19))
-				);
+							.addComponent(Card2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+							.addComponent(Card1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+							.addComponent(Card3, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
+					.addGap(18)
+					.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(Card8, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+						.addComponent(Card5, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+						.addComponent(Card6, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+						.addComponent(Card7, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(Card12, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+						.addComponent(Card11, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+						.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+							.addComponent(Card9, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+							.addComponent(Card10, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
+					.addGap(50)
+					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btuGuessAgain)
+						.addComponent(btnRestart))
+					.addGap(18)
+					.addComponent(txtInstruction, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(19))
+		);
 		getContentPane().setLayout(layout);
 
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 
-	private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-		// Exit the application.
-		System.exit(0);
-	}//GEN-LAST:event_btnExitActionPerformed
-
-	private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-		if(start == false) {
-			
-			/** Set change array */
-			for (int z = 0; z <= 11; z++) {
-				change[z] = 1;
-			}
-
-			/** Assign cards at random */
-			String temp;
-			for (int x = 0; x <= 11; x++) {
-				for (int y = 1; y <= 2; y++) {
-					temp = Integer.toString(x);
-					set.add(temp);
-				}
-			}
-
-			for (int x=0; x <= 11; x++) {
-				double index = Math.floor(Math.random()*(12-x));
-				int index1 = (int)index;
-				cards.add(set.get(index1));
-				set.remove(set.get(index1));
-			}
-			start = true;
-		}
-	}//GEN-LAST:event_btnPlayActionPerformed
-
 	private void Card1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card1ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && one == true && oneRe == false && start == true) {
+		if(tries>0 && match[0] == true && repeat[0] == false) {
 			String temp = cards.get(0);
 
 			if (temp.equals("0")) {
@@ -352,25 +306,22 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card1.setIcon(f);
 			}
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[0] = 0;
+				repeat[0] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[0] = 0;
 			}
 			tries--;
-			oneRe = true;
 		}
-
 	}//GEN-LAST:event_Card1ActionPerformed
 
 	private void Card2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card2ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && two ==true && twoRe == false && start == true) {
+		if(tries>0 && match[1] == true && repeat[1] == false) {
 			String temp = cards.get(1);
 
 			if (temp.equals("0")) {
@@ -386,25 +337,22 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card2.setIcon(f);
 			}
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[1] = 0;
+				repeat[1] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[1] = 0;
 			}
 			tries--;
-			twoRe = true;
 		}
-
 	}//GEN-LAST:event_Card2ActionPerformed
 
 	private void Card3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card3ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && three == true && threeRe == false && start == true) {
+		if(tries>0 && match[2] == true && repeat[2] == false) {
 			String temp = cards.get(2);
 
 			if (temp.equals("0")) {
@@ -420,25 +368,22 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card3.setIcon(f);
 			} 
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[2] = 0;
+				repeat[2] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[2] = 0;
 			}
 			tries--;
-			threeRe = true;
 		}
-
 	}//GEN-LAST:event_Card3ActionPerformed
 
 	private void Card4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card4ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && four == true && fourRe == false && start == true) {
+		if(tries>0 && match[3] == true && repeat[3] == false) {
 			String temp = cards.get(3);
 
 			if (temp.equals("0")) {
@@ -454,25 +399,22 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card4.setIcon(f);
 			}
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[3] = 0;
+				repeat[3] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[3] = 0;
 			}
 			tries--;
-			fourRe = true;
 		}
-
 	}//GEN-LAST:event_Card4ActionPerformed
 
 	private void Card5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card5ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && five == true && fiveRe == false && start == true) {
+		if(tries>0 && match[4] == true && repeat[4] == false) {
 			String temp = cards.get(4);
 
 			if (temp.equals("0")) {
@@ -488,26 +430,22 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card5.setIcon(f);
 			}
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[4] = 0;
+				repeat[4] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[4] = 0;
 			}
 			tries--;
-			fiveRe = true;
 		}
-
 	}//GEN-LAST:event_Card5ActionPerformed
 
 	private void Card6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card6ActionPerformed
 		// TODO add your handling code here:
-
-
-		if(tries>0 && six == true && sixRe == false && start == true) {
+		if(tries>0 && match[5] == true && repeat[5] == false) {
 			String temp = cards.get(5);
 
 			if (temp.equals("0")) {
@@ -523,25 +461,22 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card6.setIcon(f);
 			} 
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[5] = 0;
+				repeat[5] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[5] = 0;
 			}
 			tries--;
-			sixRe = true;
 		}
-
 	}//GEN-LAST:event_Card6ActionPerformed
 
 	private void Card7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card7ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && seven == true && sevenRe == false && start == true) {
+		if(tries>0 && match[6] == true && repeat[6] == false) {
 			String temp = cards.get(6);
 
 			if (temp.equals("0")) {
@@ -557,26 +492,22 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card7.setIcon(f);
 			} 
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[6] = 0;
+				repeat[6] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[6] = 0;
 			}
 			tries--;
-			sevenRe = true;
 		}
-
 	}//GEN-LAST:event_Card7ActionPerformed
 
 	private void Card8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card8ActionPerformed
 		// TODO add your handling code here:
-
-
-		if(tries>0 && eight == true && eightRe == false && start == true) {
+		if(tries>0 && match[7] == true && repeat[7] == false) {
 			String temp = cards.get(7);
 
 			if (temp.equals("0")) {
@@ -592,25 +523,23 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card8.setIcon(f);
 			}
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[7] = 0;
+				repeat[7] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[7] = 0;
 			}
 			tries--;
-			eightRe = true;
 		}
 
 	}//GEN-LAST:event_Card8ActionPerformed
 
 	private void Card9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card9ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && nine == true && nineRe == false && start == true) {
+		if(tries>0 && match[8] == true && repeat[8] == false) {
 			String temp = cards.get(8);
 
 			if (temp.equals("0")) {
@@ -630,20 +559,18 @@ public class MatchingGame extends javax.swing.JFrame {
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[8] = 0;
+				repeat[8] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[8] = 0;
 			}
 			tries--;
-			nineRe = true;
 		}
-
 	}//GEN-LAST:event_Card9ActionPerformed
 
 	private void Card10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card10ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && ten == true && tenRe == false && start == true) {
+		if(tries>0 && match[9] == true && repeat[9] == false) {
 			String temp = cards.get(9);
 
 			if (temp.equals("0")) {
@@ -659,25 +586,22 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card10.setIcon(f);
 			} 
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[9] = 0;
+				repeat[9] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[9] = 0;
 			}
 			tries--;
-			tenRe = true;
 		}
-
 	}//GEN-LAST:event_Card10ActionPerformed
 
 	private void Card11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card11ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && eleven == true && elevenRe == false && start == true) {
+		if(tries>0 && match[10] == true && repeat[10] == false) {
 			String temp = cards.get(10);
 
 			if (temp.equals("0")) {
@@ -693,25 +617,22 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card11.setIcon(f);
 			}
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[10] = 0;
+				repeat[10] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[10] = 0;
 			}
 			tries--;
-			elevenRe = true;
 		}
-
 	}//GEN-LAST:event_Card11ActionPerformed
 
 	private void Card12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Card12ActionPerformed
 		// TODO add your handling code here:
-
-		if(tries>0 && twelve == true && twelveRe == false && start == true) {
+		if(tries>0 && match[11] == true && repeat[11] == false) {
 			String temp = cards.get(11);
 
 			if (temp.equals("0")) {
@@ -727,141 +648,176 @@ public class MatchingGame extends javax.swing.JFrame {
 			} else if (temp.equals("5")) {
 				Card12.setIcon(f);
 			} 
-
 			count++;
 			if (count == 1) {
 				c1 = Integer.parseInt(temp);
 				change[11] = 0;
+				repeat[11] = true;
 			} else if (count == 2) {
 				c2 = Integer.parseInt(temp);
 				change[11] = 0;
 			}
 			tries--;
-			twelveRe = true;
 		}
-
 	}//GEN-LAST:event_Card12ActionPerformed
 
 	private void btuGuessAgainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuGuessAgainActionPerformed
 		// TODO add your handling code here:
-		tries = 2;
-		count = 0;
-		if (c1 == c2) {
-			for (int y = 1; y <= 2; y++) {
-				if (change[0] == 0) {
-					Card1.setIcon(done);
-					change[0] = 2;
-					one = false;
-				} else if (change[1] == 0) {
-					Card2.setIcon(done);
-					change[1] = 2;
-					two = false;
-				} else if (change[2] == 0) {
-					Card3.setIcon(done);
-					change[2] = 2;
-					three = false;
-				} else if (change[3] == 0) {
-					Card4.setIcon(done);
-					change[3] = 2;
-					four = false;
-				} else if (change[4] == 0) {
-					Card5.setIcon(done);
-					change[4] = 2;
-					five = false;
-				} else if (change[5] == 0) {
-					Card6.setIcon(done);
-					change[5] = 2;
-					six = false;
-				} else if (change[6] == 0) {
-					Card7.setIcon(done);
-					change[6] = 2;
-					seven = false;
-				} else if (change[7] == 0) {
-					Card8.setIcon(done);
-					change[7] = 2;
-					eight = false;
-				} else if (change[8] == 0) {
-					Card9.setIcon(done);
-					change[8] = 2;
-					nine = false;
-				} else if (change[9] == 0) {
-					Card10.setIcon(done);
-					change[9] = 2;
-					ten = false;
-				} else if (change[10] == 0) {
-					Card11.setIcon(done);
-					change[10] = 2;
-					eleven = false;
-				} else if (change[11] == 0) {
-					Card12.setIcon(done);
-					change[11] = 2;
-					twelve = false;
-				}  
+			count = 0;
+			if (c1 == c2 && tries == 0 ) {
+				for (int y = 1; y <= 2; y++) {
+					if (change[0] == 0) {
+						Card1.setIcon(done);
+						change[0] = 2;
+						match[0] = false;
+					} else if (change[1] == 0) {
+						Card2.setIcon(done);
+						change[1] = 2;
+						match[1] = false;
+					} else if (change[2] == 0) {
+						Card3.setIcon(done);
+						change[2] = 2;
+						match[2] = false;
+					} else if (change[3] == 0) {
+						Card4.setIcon(done);
+						change[3] = 2;
+						match[3] = false;
+					} else if (change[4] == 0) {
+						Card5.setIcon(done);
+						change[4] = 2;
+						match[4] = false;
+					} else if (change[5] == 0) {
+						Card6.setIcon(done);
+						change[5] = 2;
+						match[5] = false;
+					} else if (change[6] == 0) {
+						Card7.setIcon(done);
+						change[6] = 2;
+						match[6] = false;
+					} else if (change[7] == 0) {
+						Card8.setIcon(done);
+						change[7] = 2;
+						match[7] = false;
+					} else if (change[8] == 0) {
+						Card9.setIcon(done);
+						change[8] = 2;
+						match[8] = false;
+					} else if (change[9] == 0) {
+						Card10.setIcon(done);
+						change[9] = 2;
+						match[9] = false;
+					} else if (change[10] == 0) {
+						Card11.setIcon(done);
+						change[10] = 2;
+						match[10] = false;
+					} else if (change[11] == 0) {
+						Card12.setIcon(done);
+						change[11] = 2;
+						match[11] = false;
+					}  
+				}
+				cardsLeft-=2;
 			}
-			cardsLeft-=2;
-		}
-		else {
-
-			for (int z = 1; z <= 2; z++) {
-
-				if (change[0] == 0) {
-					Card1.setIcon(back);
-					change[0] = 1;
-				} else if (change[1] == 0) {
-					Card2.setIcon(back);
-					change[1] = 1;
-				} else if (change[2] == 0) {
-					Card3.setIcon(back);
-					change[2] = 1;
-				} else if (change[3] == 0) {
-					Card4.setIcon(back);
-					change[3] = 1;
-				} else if (change[4] == 0) {
-					Card5.setIcon(back);
-					change[4] = 1;
-				} else if (change[5] == 0) {
-					Card6.setIcon(back);
-					change[5] = 1;
-				} else if (change[6] == 0) {
-					Card7.setIcon(back);
-					change[6] = 1;
-				} else if (change[7] == 0) {
-					Card8.setIcon(back);
-					change[7] = 1;
-				} else if (change[8] == 0) {
-					Card9.setIcon(back);
-					change[8] = 1;
-				} else if (change[9] == 0) {
-					Card10.setIcon(back);
-					change[9] = 1;
-				} else if (change[10] == 0) {
-					Card11.setIcon(back);
-					change[10] = 1;
-				} else if (change[11] == 0) {
-					Card12.setIcon(back);
-					change[11] = 1;
-				}                                               
+			else {
+				for (int z = 1; z <= 2; z++) {
+					if (change[0] == 0) {
+						Card1.setIcon(back);
+						change[0] = 1;
+					} else if (change[1] == 0) {
+						Card2.setIcon(back);
+						change[1] = 1;
+					} else if (change[2] == 0) {
+						Card3.setIcon(back);
+						change[2] = 1;
+					} else if (change[3] == 0) {
+						Card4.setIcon(back);
+						change[3] = 1;
+					} else if (change[4] == 0) {
+						Card5.setIcon(back);
+						change[4] = 1;
+					} else if (change[5] == 0) {
+						Card6.setIcon(back);
+						change[5] = 1;
+					} else if (change[6] == 0) {
+						Card7.setIcon(back);
+						change[6] = 1;
+					} else if (change[7] == 0) {
+						Card8.setIcon(back);
+						change[7] = 1;
+					} else if (change[8] == 0) {
+						Card9.setIcon(back);
+						change[8] = 1;
+					} else if (change[9] == 0) {
+						Card10.setIcon(back);
+						change[9] = 1;
+					} else if (change[10] == 0) {
+						Card11.setIcon(back);
+						change[10] = 1;
+					} else if (change[11] == 0) {
+						Card12.setIcon(back);
+						change[11] = 1;
+					}                                               
+				}
 			}
-		}
-		if(cardsLeft == 0) {
-			txtInstruction.setText("Congratulations");
-		}
-		oneRe = false;
-		twoRe = false;
-		threeRe = false;
-		fourRe = false;
-		fiveRe = false;
-		sixRe = false;
-		sevenRe = false;
-		eightRe = false;
-		nineRe = false;
-		tenRe = false;
-		elevenRe = false;
-		twelveRe = false;
-
-
+			if(cardsLeft == 0) {
+				txtInstruction.setText("Congratulations");
+			}
+			for(int i = 0; i<12; i++) {
+				repeat[i] = false;
+			}
+			tries = 2;
 	}//GEN-LAST:event_btuGuessAgainActionPerformed
 
+	private void btnRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestartActionPerformed
+		/** Reshuffle cards*/
+		cards = new ArrayList<String>();
+		set = new ArrayList<String>();
+		
+		cardsLeft = 12;
+		tries = 2;
+		count = 0;
+		
+		for(int i = 0; i<12;i++) {
+			match[i] = true;
+			repeat[i] = false;
+		}
+		
+		/** Set change array */
+		for (int z = 0; z <= 11; z++) {
+			change[z] = 1;
+		}
+		
+		/** Assign cards at random */
+		String temp;
+		for (int x = 0; x <= 5; x++) { 	
+			for (int y = 1; y <= 2; y++) {
+				temp = Integer.toString(x);
+				set.add(temp);
+			}
+		}
+		
+		/** Places cards at random location */
+		for (int x=0; x <= 11; x++) {
+			double index = Math.floor(Math.random()*(12-x));
+			int index1 = (int)index;
+			cards.add(set.get(index1));
+			set.remove(set.get(index1));
+		}
+		Card1.setIcon(back);
+		Card2.setIcon(back);
+		Card3.setIcon(back);
+		Card4.setIcon(back);
+		Card5.setIcon(back);
+		Card6.setIcon(back);
+		Card7.setIcon(back);
+		Card8.setIcon(back);
+		Card9.setIcon(back);
+		Card10.setIcon(back);
+		Card11.setIcon(back);
+		Card12.setIcon(back);
+		
+		txtInstruction.setText("Make sure to click Guess Again after each guess.");
+	}
 	/**
 	 * @param args the command line arguments
 	 */
@@ -910,9 +866,8 @@ public class MatchingGame extends javax.swing.JFrame {
 	private javax.swing.JButton Card7;
 	private javax.swing.JButton Card8;
 	private javax.swing.JButton Card9;
-	private javax.swing.JButton btnExit;
-	private javax.swing.JButton btnPlay;
 	private javax.swing.JButton btuGuessAgain;
 	private javax.swing.JLabel mainTitle;
 	private javax.swing.JTextField txtInstruction;
+	private javax.swing.JButton btnRestart;
 }
